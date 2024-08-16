@@ -28,37 +28,70 @@ public_users.post("/register", (req, res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-  //Write your code here
-  return res.status(300).json(books);
+  // Sync code
+  // return res.status(300).json(books);
+
+  // Async
+  new Promise((resolve, reject) => {
+                resolve(books)
+  }).then((result) => {res.status(300).json(result)});
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
-  return res.status(300).json(books[parseInt(req.params.isbn)]);
+  // Sync code
+  // return res.status(300).json(books[parseInt(req.params.isbn)]);
+
+  // Async code
+  new Promise((resolve, reject) => {
+    resolve(books)
+  }).then((result) => {res.status(300).json(books[parseInt(req.params.isbn)]) });
  });
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
   //Write your code here
-  let results = {};
-  for (isbn in books) {
-      if (books[isbn].author == req.params.author) {
+  function getByAuthor(author) {
+    let results = {};
+        for (isbn in books) {
+        if (books[isbn].author == author) {
           results[isbn] = books[isbn];
-      }
+        }
+    }
+    return results;
   }
-  return res.status(300).json(results);
-});
+
+  // Sync
+  // return res.status(300).json(getByAuthor(req.params.author));
+
+  // Async code
+  new Promise((resolve, reject) => {
+    resolve(books)
+  }).then((result) => {res.status(300).json(getByAuthor(req.params.author))});
+
+ });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
   //Write your code here
-  let results = {};
-  for (isbn in books) {
-      if (books[isbn].title == req.params.title) {
-          results[isbn] = books[isbn];
-      }
+  function getByTitle(title) {
+    let results = {};
+    for (isbn in books) {
+        if (books[isbn].title == title) {
+            results[isbn] = books[isbn];
+        }
+    }
+    return results;
   }
-  return res.status(300).json(results);
+
+  // Sync
+  //return res.status(300).json(getByTitle(req.params.title));
+
+  // Async
+  new Promise((resolve, reject) => {
+    resolve(books)
+  }).then((result) => {res.status(300).json(getByTitle(req.params.title))});
+
 });
 
 //  Get book review
